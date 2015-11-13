@@ -34,7 +34,7 @@ server.middleware = function (req, res) {
     readyCheck = titleCheck
   }
 
-  var url = req.url.slice(1)
+  var url = req.url.slice(1).replace('_escaped_fragment_', '')
   jobs.push({
     url: url,
     res: res,
