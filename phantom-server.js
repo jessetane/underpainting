@@ -1,6 +1,8 @@
 var system = require('system')
 var Page = require('webpage')
 
+var TIMEOUT = system.env.TIMEOUT || 5000
+
 serve()
 
 function serve (old) {
@@ -17,7 +19,7 @@ function serve (old) {
   }
 
   req.page.settings.loadImages = false
-  req.page.settings.resourceTimeout = 5000
+  req.page.settings.resourceTimeout = TIMEOUT
   req.page.onResourceTimeout = ontimeout.bind(req)
   req.page.onResourceReceived = onresource.bind(req)
   req.page.open(req.url, onopen.bind(req))
