@@ -1,0 +1,13 @@
+{
+  "name": "prerender2",
+  "version": "1.0.0",
+  "description": "Prerender fork",
+  "scripts": {
+    "serve": "node http-server.js"
+  },
+  "dependencies": {
+    "app-server": "github:jessetane/app-server"
+  },
+  "author": "jesse.tane@gmail.com",
+  "license": "WTFPL"
+}
