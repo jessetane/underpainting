@@ -1,9 +1,7 @@
-var fs = require('fs')
 var http = require('app-server')
 var spawn = require('child_process').spawn
 
 var MAX_WORKERS = process.env.MAX_WORKERS || 5
-var ALLOWED_DOMAINS = process.env.ALLOWED_DOMAINS || ''
 var RETIREMENT_AGE = process.env.RETIREMENT_AGE || 25
 var PHANTOMJS = process.env.PHANTOMJS || 'phantomjs'
 
