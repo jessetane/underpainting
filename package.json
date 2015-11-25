@@ -1,7 +1,7 @@
 {
-  "name": "prerender2",
+  "name": "underpainting",
   "version": "1.0.0",
-  "description": "Prerender fork",
+  "description": "Render HTML on the server that's supposed to be rendered on the client",
   "scripts": {
     "serve": "node http-server.js"
   },
