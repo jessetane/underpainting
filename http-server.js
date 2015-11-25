@@ -26,7 +26,7 @@ server.middleware = function (req, res) {
 
   var readyCheck = req.url.match(/_ready_check_=([^&]*)/)
   if (readyCheck) {
-    readyCheck = decodeURIComponent(readyCheck[1])
+    readyCheck = Buffer(readyCheck[1], 'base64').toString()
     req.url = req.url.replace(/_ready_check_=[^&]*[&]?/, '')
   } else {
     readyCheck = titleCheck
