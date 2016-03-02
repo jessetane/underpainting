@@ -45,21 +45,12 @@ xvfb-run chromium-browser --remote-debugging-port=9222
 ```
 
 #### Disabling image loading
-To disable image loading, you need this setting in Chrome's config file:
+To disable image loading for all users, you can create a Chrome [policy](https://www.chromium.org/developers/how-tos/enterprise/adding-new-policies) setting:
 ``` json
 {
-  "profile": {
-    "default_content_setting_values": {
-      "images": 2
-    }
-  }
+  "DefaultImagesSetting": 2
 }
 ```
-
-* the config file on linux:
-  * ~/.config/chromium/Local\ State
-* the config file on mac:
-  * ~/Library/Application\ Support/Google/Chrome/Default/Preferences
 
 ## License
 Public domain
