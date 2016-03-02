@@ -1,6 +1,6 @@
 'use strict';
 
-var Tab = require('../chrome-tab')
+var Tab = require('chrome-tab')
 
 module.exports = class extends Tab {
   loadUrl (url, readyCheck, cb) {
