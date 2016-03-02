@@ -29,7 +29,7 @@ You probably want to limit the number of tabs you have open at any given time de
 The interval at which to execute the target's ready check. Defaults to 100ms.
 
 #### `TIMEOUT`
-The amount of time workers are allowed to spend processing a request is capped. Defaults to 5000 ms.
+The amount of time workers are allowed to spend processing a request is capped. Defaults to 5000ms.
 
 ## Notes
 
