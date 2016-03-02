@@ -7,32 +7,59 @@ From what I can tell it's still not possible to get decent search results for ap
 [Prerender](https://github.com/prerender/prerender) is a nice idea for solving the problem, but it seems overly complex and ran my server OOM so I hacked this up instead.
 
 ## How
-BYO Phantom, talk to it over standard streams. Optionally pass a custom "ready check" function - defaults to `function () { return document.querySelector('title').textContent }`. You can pass it in the querystring base64 encoded under the key `_ready_check_`.
+BYO Chromium, talk to it using the [remote debugging protocol](https://developer.chrome.com/devtools/docs/debugger-protocol). Optionally pass a custom "ready check" expression - defaults to `document.querySelector('title').textContent`. You can pass it in the querystring, base64 encoded under the key _ready_check_.
 
 ## Example
 ```bash
-$ PHANTOM_JS=/usr/local/bin/phantomjs MAX_WORKERS=5 RETIREMENT_AGE=20 TIMEOUT=5000 node http-server &
-$ curl http://keychord.jessetane.com                       # normal
-$ curl http://localhost:8080/http://keychord.jessetane.com # prerendered
+$ node index.js &
+$ curl http://unicodes.jessetane.com                       # empty dom
+$ curl http://localhost:8080/http://unicodes.jessetane.com # dom with stuff
 ```
 
 ## Configuration
 Enviroment variables you can set. Sane (hopefully) defaults are provided but you will probably need to adjust them.
 
-#### `PHANTOM_JS`
-You probably want the 2.x branch of PhantomJS, but you also probably won't be able to download it prebuilt for your system. This module isn't about packaging Phantom though so I'll let you figure out how to get a copy on your own. Once obtained, indicate the location of your PhantomJS executable with this variable. Defaults to using your PATH and an executable being called "phantomjs".
+#### `CHROME_{HOST,PORT}`
+Defaults to localhost:9222.
 
 #### `MAX_WORKERS`
-Phantom is a single threaded beast, so you need a process for each concurrent request you want to handle. You'll probably want to cap the number of workers that can be forked at one time based on the resources you have available. Defaults to 5.
+You probably want to limit the number of tabs you have open at any given time depending on the resources you have available. Defaults to 5.
 
-#### `RETIREMENT_AGE`
-Phantom seems to have a [leak](https://github.com/ariya/phantomjs/issues/12903)? This means workers need to get retired after a certain age. Nothing fancy here, just spec a `RETIREMENT_AGE` and after a worker has processed that many requests it will be retired (replaced if necessary). Defaults to 20.
+#### `READY_CHECK_INTERVAL`
+The interval at which to execute the target's ready check. Defaults to 100ms.
 
 #### `TIMEOUT`
 The amount of time workers are allowed to spend processing a request is capped. Defaults to 5000 ms.
 
 ## Notes
-Could this module be fancier? Sure. Should it be? Depends, I'm hoping Google will fix their crawler though.
+
+#### Installing / running Chrome headlessly on Ubuntu
+``` shell
+apt-get install xvfb chromium-browser
+xvfb-run chromium-browser --remote-debugging-port=9222
+```
+
+#### Running Chrome (with debugging enabled) on OS X
+``` shell
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+```
+
+#### Disabling image loading
+To disable image loading, you need this setting in Chrome's config file:
+``` json
+{
+  "profile": {
+    "default_content_setting_values": {
+      "images": 2
+    }
+  }
+}
+```
+
+* the config file on linux:
+  * ~/.config/chromium/Local\ State
+* the config file on mac:
+  * ~/Library/Application\ Support/Google/Chrome/Default/Preferences
 
 ## License
-WTFPL
+Public domain

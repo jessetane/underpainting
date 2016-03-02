@@ -2,12 +2,11 @@
   "name": "underpainting",
   "version": "1.0.0",
   "description": "Render HTML on the server that's supposed to be rendered on the client",
-  "scripts": {
-    "serve": "node http-server.js"
-  },
   "dependencies": {
-    "app-server": "github:jessetane/app-server"
+    "app-server": "github:jessetane/app-server#3.0.1",
+    "chrome-tab": "^1.0.2"
   },
+  "repository": "https://github.com/jessetane/underpainting",
   "author": "jesse.tane@gmail.com",
-  "license": "WTFPL"
+  "license": "Public domain"
 }
