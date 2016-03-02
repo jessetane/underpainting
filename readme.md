@@ -7,7 +7,7 @@ From what I can tell it's still not possible to get decent search results for ap
 [Prerender](https://github.com/prerender/prerender) is a nice idea for solving the problem, but it seems overly complex and ran my server OOM so I hacked this up instead.
 
 ## How
-BYO Chromium, talk to it using the [remote debugging protocol](https://developer.chrome.com/devtools/docs/debugger-protocol). Optionally pass a custom "ready check" expression - defaults to `document.querySelector('title').textContent`. You can pass it in the querystring, base64 encoded under the key _ready_check_.
+BYO Chromium, talk to it using the [remote debugging protocol](https://developer.chrome.com/devtools/docs/debugger-protocol). Optionally pass a custom "ready check" expression - defaults to `document.querySelector('title').textContent`. You can pass it in the querystring, base64 encoded under the key `_ready_check_`.
 
 ## Example
 ```bash
