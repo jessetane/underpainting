@@ -2,6 +2,9 @@
   "name": "underpainting",
   "version": "2.0.1",
   "description": "Render HTML on the server that's supposed to be rendered on the client",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "chrome-tab": "^1.0.2"
   },
