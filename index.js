@@ -1,4 +1,4 @@
-var http = require('app-server')
+var http = require('http')
 var Worker = require('./worker')
 
 var maxWorkers = process.env.MAX_WORKERS || 5
@@ -7,12 +7,7 @@ var available = []
 var busy = 0
 var titleCheck = `document.querySelector('title').textContent`
 
-var server = http(function (err) {
-  if (err) throw err
-  console.log('server listening on ' + server.port)
-})
-
-server.middleware = (req, res) => {
+var server = http.createServer((req, res) => {
   if (req.method !== 'GET') {
     res.statusCode = 400
     return res.end('GET only')
@@ -38,7 +33,12 @@ server.middleware = (req, res) => {
   })
 
   work()
-}
+})
+
+server.listen(process.env.PORT || '8080', process.env.HOST || '::', (err) => {
+  if (err) throw err
+  console.log('server listening on', process.env.PORT || '8080')
+})
 
 function work () {
   if (requests.length === 0) return

@@ -3,7 +3,6 @@
   "version": "2.0.1",
   "description": "Render HTML on the server that's supposed to be rendered on the client",
   "dependencies": {
-    "app-server": "github:jessetane/app-server#3.0.1",
     "chrome-tab": "^1.0.2"
   },
   "repository": "https://github.com/jessetane/underpainting",
