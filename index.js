@@ -59,7 +59,8 @@ function work () {
     busy++
     worker = new Worker({
       host: process.env.CHROME_HOST,
-      port: process.env.CHROME_PORT
+      port: process.env.CHROME_PORT,
+      timeout: process.env.TIMEOUT
     })
     worker.open(err => {
       if (err) {
