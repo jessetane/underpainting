@@ -11,9 +11,6 @@ var server = http.createServer((req, res) => {
   if (req.method !== 'GET') {
     res.statusCode = 400
     return res.end('GET only')
-  } else if (!/^\/http/.test(req.url)) {
-    res.statusCode = 400
-    return res.end('pathname must contain an HTTP url')
   }
 
   var url = req.url.slice(1).replace(/_escaped_fragment_[^&]*/, '')
