@@ -109,6 +109,7 @@ function scrape (worker, req) {
       }
     } else {
       req.res.end(html)
+      worker.call('Page.navigate', { url: 'about:blank' }, err => {})
       available.push(worker)
     }
     busy--
