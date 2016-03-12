@@ -46,12 +46,7 @@ module.exports = class extends Tab {
       expression: `Array.prototype.slice.call(document.querySelectorAll('script')).forEach(function (script) {
   script.remove()
 });
-var contentType = document.contentType
-if (contentType === 'text/html') {
-  document.documentElement.outerHTML
-} else {
-  document.body.firstElementChild.innerHTML
-}`,
+document.documentElement.outerHTML`,
       returnByValue: true
     }, (err, response) => {
       if (err) return cb(err)
