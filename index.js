@@ -1,5 +1,6 @@
 var http = require('http')
 var Worker = require('./worker')
+var qs = require('querystring')
 
 var maxWorkers = process.env.MAX_WORKERS || 5
 var requests = []
@@ -13,27 +14,28 @@ var server = http.createServer((req, res) => {
     return res.end('GET only')
   }
 
-  var url = req.url.slice(1).replace(/_escaped_fragment_[^&]*/, '')
-
-  var readyCheck = url.match(/_ready_check_=([^&]*)/)
-  if (readyCheck) {
-    readyCheck = Buffer(readyCheck[1], 'base64').toString()
-    url = url.replace(/_ready_check_=[^&]*[&]?/, '')
-  } else {
-    readyCheck = titleCheck
-  }
-
-  var readyCheckInterval = url.match(/_ready_check_interval_=([^&]*)/)
-  if (readyCheckInterval) {
-    readyCheckInterval = parseInt(readyCheckInterval[1], 10)
-    url = url.replace(/_ready_check_interval_=[^&]*[&]?/, '')
-  }
-  if (isNaN(readyCheckInterval)) {
-    readyCheckInterval = 100
-  }
-
-  if (url !== req.url && /\?$/.test(url)) {
-    url = url.slice(0, -1)
+  var url = req.url.slice(1)
+  var readyCheck = titleCheck
+  var readyCheckInterval = 100
+  var params = url.split('?')
+  if (params.length > 1) {
+    url = params[0]
+    params = qs.parse(params[1])
+    if (params._ready_check_) {
+      readyCheck = Buffer(params._ready_check_, 'hex').toString('utf8')
+    }
+    if (params._ready_check_interval_) {
+      readyCheckInterval = parseInt(params._ready_check_interval_, 10)
+      if (isNaN(readyCheckInterval)) {
+        readyCheckInterval = 100
+      }
+    }
+    delete params._escaped_fragment_
+    delete params._ready_check_
+    delete params._ready_check_interval_
+    if (Object.keys(params).length) {
+      url = `${url}?${qs.stringify(params)}`
+    }
   }
 
   requests.push({
