@@ -3,7 +3,7 @@
 var Tab = require('chrome-tab')
 
 module.exports = class extends Tab {
-  loadUrl (url, readyCheck, cb) {
+  loadUrl (req, cb) {
     var timeout = setTimeout(() => {
       this.methods = {}
       cb._called = true
@@ -13,7 +13,7 @@ module.exports = class extends Tab {
     var waitForReady = () => {
       if (cb._called) return
       this.call('Runtime.evaluate', {
-        expression: readyCheck,
+        expression: req.readyCheck,
         returnByValue: true
       }, (err, response) => {
         if (cb._called) return
@@ -23,14 +23,14 @@ module.exports = class extends Tab {
           cb._called = true
           return cb(err)
         } else {
-          setTimeout(waitForReady, process.env.READY_CHECK_INTERVAL || 100)
+          setTimeout(waitForReady, req.readyCheckInterval)
         }
       })
     }
 
     this.methods['Page.loadEventFired'] = waitForReady
 
-    this.call('Page.navigate', { url: url }, err => {
+    this.call('Page.navigate', { url: req.url }, err => {
       if (cb._called) return
       if (err) {
         clearTimeout(timeout)

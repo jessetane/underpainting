@@ -23,10 +23,20 @@ var server = http.createServer((req, res) => {
     readyCheck = titleCheck
   }
 
+  var readyCheckInterval = url.match(/_ready_check_interval_=([^&]*)/)
+  if (readyCheckInterval) {
+    readyCheckInterval = parseInt(readyCheckInterval[1], 10)
+    url = url.replace(/_ready_check_interval_=[^&]*[&]?/, '')
+  }
+  if (isNaN(readyCheckInterval)) {
+    readyCheckInterval = 100
+  }
+
   requests.push({
     res: res,
     url: url,
-    readyCheck: readyCheck
+    readyCheck: readyCheck,
+    readyCheckInterval: readyCheckInterval
   })
 
   work()
@@ -65,7 +75,7 @@ function work () {
 function fetch (worker) {
   busy++
   var req = requests.shift()
-  worker.loadUrl(req.url, req.readyCheck, err => {
+  worker.loadUrl(req, err => {
     if (err) {
       if (err.message === 'not opened') {
         requests.push(req)
