@@ -7,7 +7,9 @@ From what I can tell it's still not possible to get decent search results for ap
 [Prerender](https://github.com/prerender/prerender) is a nice idea for solving the problem, but it seems overly complex and ran my server OOM so I hacked this up instead.
 
 ## How
-BYO Chromium, talk to it using the [remote debugging protocol](https://developer.chrome.com/devtools/docs/debugger-protocol). Optionally pass a custom "ready check" expression - defaults to `document.querySelector('title').textContent`. You can pass it in the querystring, base64 encoded under the key `_ready_check_`.
+BYO Chromium, talk to it using the [remote debugging protocol](https://developer.chrome.com/devtools/docs/debugger-protocol).
+* Optionally pass a custom `_ready_check_` expression by passing it in the querystring, base64 encoded. Defaults to `document.querySelector('title').textContent`.
+* Optionally pass a custom `_ready_check_interval_` to indicate how frequently the `_ready_check_` should be tested. Specified in milliseconds. Defaults to `100`.
 
 ## Example
 ```bash
@@ -24,9 +26,6 @@ Defaults to localhost:9222.
 
 #### `MAX_WORKERS`
 You probably want to limit the number of tabs you have open at any given time depending on the resources you have available. Defaults to 5.
-
-#### `READY_CHECK_INTERVAL`
-The interval at which to execute the target's ready check. Defaults to 100ms.
 
 #### `TIMEOUT`
 The amount of time workers are allowed to spend processing a request is capped. Defaults to 5000ms.
