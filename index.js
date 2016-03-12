@@ -65,20 +65,20 @@ function work () {
     worker.open(err => {
       if (err) {
         worker.close()
-        busy--
-        work()
       } else {
         worker.call('Page.enable', err => {})
-        fetch(worker)
+        available.push(worker)
       }
+      busy--
+      work()
     })
   } else {
-    busy++
     fetch(worker)
   }
 }
 
 function fetch (worker) {
+  busy++
   var req = requests.shift()
   worker.loadUrl(req, err => {
     if (err) {
