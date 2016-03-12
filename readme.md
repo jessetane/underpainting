@@ -8,7 +8,7 @@ From what I can tell it's still not possible to get decent search results for ap
 
 ## How
 BYO Chromium, talk to it using the [remote debugging protocol](https://developer.chrome.com/devtools/docs/debugger-protocol).
-* Optionally pass a custom `_ready_check_` expression by passing it in the querystring, base64 encoded. Defaults to `document.querySelector('title').textContent`.
+* Optionally pass a custom `_ready_check_` expression by passing it in the querystring, hex encoded. Defaults to `document.querySelector('title').textContent`.
 * Optionally pass a custom `_ready_check_interval_` to indicate how frequently the `_ready_check_` should be tested. Specified in milliseconds. Defaults to `100`.
 
 ## Example
