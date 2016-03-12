@@ -22,25 +22,25 @@ $ curl http://localhost:8080/http://unicodes.jessetane.com # dom with stuff
 Enviroment variables you can set. Sane (hopefully) defaults are provided but you will probably need to adjust them.
 
 #### `CHROME_{HOST,PORT}`
-Defaults to localhost:9222.
+Defaults are `localhost` and `9222` respectively.
 
 #### `MAX_WORKERS`
-You probably want to limit the number of tabs you have open at any given time depending on the resources you have available. Defaults to 5.
+You probably want to limit the number of tabs you have open at any given time depending on the resources you have available. Defaults to `5`.
 
 #### `TIMEOUT`
-The amount of time workers are allowed to spend processing a request is capped. Defaults to 5000ms.
+The number of milliseconds workers are allowed to spend processing a request is capped. Defaults to `5000`.
 
 ## Notes
 
 #### Installing / running Chrome headlessly on Ubuntu
 ``` shell
-apt-get install xvfb chromium-browser
-xvfb-run chromium-browser --remote-debugging-port=9222
+$ apt-get install xvfb chromium-browser
+$ xvfb-run chromium-browser --remote-debugging-port=9222
 ```
 
 #### Running Chrome (with debugging enabled) on OS X
 ``` shell
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+$ /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 ```
 
 #### Disabling image loading
