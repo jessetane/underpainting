@@ -32,6 +32,10 @@ var server = http.createServer((req, res) => {
     readyCheckInterval = 100
   }
 
+  if (url !== req.url && /\?$/.test(url)) {
+    url = url.slice(0, -1)
+  }
+
   requests.push({
     res: res,
     url: url,
