@@ -10,6 +10,7 @@ From what I can tell it's still not possible to get decent search results for ap
 BYO Chromium, talk to it using the [remote debugging protocol](https://developer.chrome.com/devtools/docs/debugger-protocol).
 * Optionally pass a custom `_ready_check_` expression by passing it in the querystring, hex encoded. Defaults to `document.querySelector('title').textContent`.
 * Optionally pass a custom `_ready_check_interval_` to indicate how frequently the `_ready_check_` should be tested. Specified in milliseconds. Defaults to `100`.
+* Optionally pass `_strip_js_` to indicate you would like all script tags removed from responses. Defaults to `false`.
 
 ## Example
 ```bash
@@ -24,6 +25,9 @@ Enviroment variables you can set. Sane (hopefully) defaults are provided but you
 #### `CHROME_{HOST,PORT}`
 Defaults are `localhost` and `9222` respectively.
 
+#### `CHROME_OWNER`
+Defaults to true (but can be set to `'false'`) and implies that any existing tabs should be closed at start up.
+
 #### `MAX_WORKERS`
 You probably want to limit the number of tabs you have open at any given time depending on the resources you have available. Defaults to `5`.
 
@@ -36,6 +40,8 @@ The number of milliseconds workers are allowed to spend processing a request is 
 ``` shell
 $ apt-get install xvfb chromium-browser
 $ xvfb-run chromium-browser --remote-debugging-port=9222
+$ # or a slightly more customized example:
+# xvfb-run --server-args='-screen 0, 1024x768x16' chromium-browser --start-maximized --no-first-run --disable-gpu --remote-debugging-port=9222
 ```
 
 #### Running Chrome (with debugging enabled) on OS X
