@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "Render HTML on the server that's supposed to be rendered on the client",
   "scripts": {
-    "start": "node index.js"
+    "start": ". ./env.sh && node index.js"
   },
   "dependencies": {
     "chrome-tab": "^1.1.0"
