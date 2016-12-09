@@ -39,7 +39,7 @@ var server = http.createServer((req, res) => {
         readyCheckInterval = 100
       }
     }
-    if (params._strip_js_) {
+    if (params._strip_js_ !== undefined) {
       stripJs = true
     }
     delete params._escaped_fragment_
