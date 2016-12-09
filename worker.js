@@ -4,6 +4,8 @@ var Tab = require('chrome-tab')
 
 module.exports = class extends Tab {
   loadUrl (req, cb) {
+    this.req = req
+
     var timeout = setTimeout(() => {
       this.methods = {}
       cb._called = true
@@ -43,10 +45,8 @@ module.exports = class extends Tab {
 
   getHtml (cb) {
     this.call('Runtime.evaluate', {
-      expression: `Array.prototype.slice.call(document.querySelectorAll('script')).forEach(function (script) {
-  script.remove()
-});
-document.documentElement.outerHTML`,
+      expression: this.req.stripJs ? `Array.from(document.querySelectorAll('script')).forEach(script => script.remove());
+document.documentElement.outerHTML` : `document.documentElement.outerHTML`,
       returnByValue: true
     }, (err, response) => {
       if (err) return cb(err)

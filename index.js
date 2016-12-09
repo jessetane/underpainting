@@ -25,6 +25,7 @@ var server = http.createServer((req, res) => {
   var url = req.url.slice(1)
   var readyCheck = titleCheck
   var readyCheckInterval = 100
+  var stripJs = false
   var params = url.split('?')
   if (params.length > 1) {
     url = params[0]
@@ -38,19 +39,24 @@ var server = http.createServer((req, res) => {
         readyCheckInterval = 100
       }
     }
+    if (params._strip_js_) {
+      stripJs = true
+    }
     delete params._escaped_fragment_
     delete params._ready_check_
     delete params._ready_check_interval_
+    delete params._strip_js_
     if (Object.keys(params).length) {
       url = `${url}?${qs.stringify(params)}`
     }
   }
 
   requests.push({
-    res: res,
-    url: url,
-    readyCheck: readyCheck,
-    readyCheckInterval: readyCheckInterval
+    res,
+    url,
+    readyCheck,
+    readyCheckInterval,
+    stripJs
   })
 
   work()
