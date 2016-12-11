@@ -12,7 +12,7 @@ var titleCheck = `document.querySelector('title').textContent`
 if (process.env.CHROME_OWNER !== 'false') {
   Tab.list((err, tabs) => {
     if (err) throw err
-    tabs.forEach(tab => tab.close())
+    tabs.slice(1).forEach(tab => tab.close())
   })
 }
 
