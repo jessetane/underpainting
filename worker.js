@@ -53,4 +53,8 @@ document.documentElement.outerHTML` : `document.documentElement.outerHTML`,
       return cb(null, response.result.value)
     })
   }
+
+  clear () {
+    this.call('Page.navigate', { url: 'about:blank' }, err => {})
+  }
 }

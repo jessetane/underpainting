@@ -103,6 +103,7 @@ function fetch (worker) {
       } else {
         req.res.statusCode = 500
         req.res.end('server error')
+        worker.clear()
         available.push(worker)
       }
       busy--
@@ -121,11 +122,12 @@ function scrape (worker, req) {
       } else {
         req.res.statusCode = 500
         req.res.end('server error')
+        worker.clear()
         available.push(worker)
       }
     } else {
       req.res.end(html)
-      worker.call('Page.navigate', { url: 'about:blank' }, err => {})
+      worker.clear()
       available.push(worker)
     }
     busy--
