@@ -6,7 +6,7 @@
     "start": ". ./env.sh && node index.js"
   },
   "dependencies": {
-    "chrome-tab": "^1.1.0"
+    "puppeteer": "^1.11.0"
   },
   "repository": "https://github.com/jessetane/underpainting",
   "author": "jesse.tane@gmail.com",

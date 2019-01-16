@@ -1,60 +1,69 @@
-'use strict';
+var Puppeteer = require('puppeteer')
 
-var Tab = require('chrome-tab')
+class Worker {
+  constructor (opts = {}) {
+    this.timeout = opts.timeout || 15000
+  }
 
-module.exports = class extends Tab {
+  open (cb) {
+    var ready = null
+    if (!this.browser) {
+      ready = Puppeteer.launch().then(b => {
+        this.browser = b
+        return this.browser.newPage()
+      })
+    } else {
+      ready = this.browser.newPage()
+    }
+    ready.then(p => {
+      this.page = p
+      cb()
+    }).catch(cb)
+  }
+
   loadUrl (req, cb) {
     this.req = req
-
+    var nextCheck = null
     var timeout = setTimeout(() => {
-      this.methods = {}
+      clearTimeout(nextCheck)
       cb._called = true
       cb(new Error('timed out'))
     }, this.timeout)
-
     var waitForReady = () => {
-      if (cb._called) return
-      this.call('Runtime.evaluate', {
-        expression: req.readyCheck,
-        returnByValue: true
-      }, (err, response) => {
+      this.page.evaluate(req.readyCheck).then(res => {
         if (cb._called) return
-        if (err || !!response.result.value) {
+        if (res) {
           clearTimeout(timeout)
-          this.methods = {}
-          cb._called = true
-          return cb(err)
+          cb()
         } else {
-          setTimeout(waitForReady, req.readyCheckInterval)
+          nextCheck = setTimeout(waitForReady, req.readyCheckInterval)
         }
+      }).catch(err => {
+        clearTimeout(timeout)
+        clearTimeout(nextCheck)
+        cb(err)
       })
     }
-
-    this.methods['Page.loadEventFired'] = waitForReady
-
-    this.call('Page.navigate', { url: req.url }, err => {
-      if (cb._called) return
-      if (err) {
-        clearTimeout(timeout)
-        this.methods = {}
-        cb._called = true
-        return cb(err)
-      }
-    })
+    this.page.goto(req.url, { waitUntil: 'networkidle2' }).then(waitForReady).catch(cb)
   }
 
   getHtml (cb) {
-    this.call('Runtime.evaluate', {
-      expression: this.req.stripJs ? `Array.from(document.querySelectorAll('script')).forEach(script => script.remove());
-document.documentElement.outerHTML` : `document.documentElement.outerHTML`,
-      returnByValue: true
-    }, (err, response) => {
-      if (err) return cb(err)
-      return cb(null, response.result.value)
-    })
+    this.page.evaluate(this.req.stripJs ? `Array.from(document.querySelectorAll('script')).forEach(script => script.remove());
+document.documentElement.outerHTML` : `document.documentElement.outerHTML`).then(res => {
+      cb(null, res)
+    }).catch(cb)
   }
 
   clear () {
-    this.call('Page.navigate', { url: 'about:blank' }, err => {})
+    this.page.goto('about:blank')
+  }
+
+  close () {
+    if (this.page) {
+      this.page.close()
+      delete this.page
+    }
   }
 }
+
+module.exports = Worker

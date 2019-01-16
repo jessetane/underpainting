@@ -1,6 +1,5 @@
 var http = require('http')
 var qs = require('querystring')
-var Tab = require('chrome-tab')
 var Worker = require('./worker')
 
 var maxWorkers = process.env.MAX_WORKERS || 5
@@ -8,13 +7,6 @@ var requests = []
 var available = []
 var busy = 0
 var titleCheck = `document.querySelector('title').textContent`
-
-if (process.env.CHROME_OWNER !== 'false') {
-  Tab.list((err, tabs) => {
-    if (err) throw err
-    tabs.slice(1).forEach(tab => tab.close())
-  })
-}
 
 var server = http.createServer((req, res) => {
   if (req.method !== 'GET') {
@@ -31,7 +23,7 @@ var server = http.createServer((req, res) => {
     url = params[0]
     params = qs.parse(params[1])
     if (params._ready_check_) {
-      readyCheck = Buffer(params._ready_check_, 'hex').toString('utf8')
+      readyCheck = Buffer.from(params._ready_check_, 'hex').toString('utf8')
     }
     if (params._ready_check_interval_) {
       readyCheckInterval = parseInt(params._ready_check_interval_, 10)
@@ -74,15 +66,12 @@ function work () {
   if (!worker) {
     busy++
     worker = new Worker({
-      host: process.env.CHROME_HOST,
-      port: process.env.CHROME_PORT,
       timeout: parseInt(process.env.TIMEOUT)
     })
     worker.open(err => {
       if (err) {
         worker.close()
       } else {
-        worker.call('Page.enable', err => {})
         available.push(worker)
       }
       busy--
