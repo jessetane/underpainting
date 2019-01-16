@@ -1,6 +1,6 @@
 {
   "name": "underpainting",
-  "version": "3.0.3",
+  "version": "4.0.0",
   "description": "Render HTML on the server that's supposed to be rendered on the client",
   "scripts": {
     "start": ". ./env.sh && node index.js"
