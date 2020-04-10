@@ -48,8 +48,16 @@ class Worker {
   }
 
   getHtml (cb) {
-    this.page.evaluate(this.req.stripJs ? `Array.from(document.querySelectorAll('script')).forEach(script => script.remove());
-document.documentElement.outerHTML` : `document.documentElement.outerHTML`).then(res => {
+    var extractor = `JSON.stringify({
+  doctype: document.doctype.name,
+  charset: document.characterSet,
+  contentType: document.contentType,
+  content: document.documentElement.outerHTML
+})`
+    if (this.req.stripJs) {
+      extractor = `Array.from(document.querySelectorAll('script')).forEach(script => script.remove());` + extractor
+    }
+    this.page.evaluate(extractor).then(res => {
       cb(null, res)
     }).catch(cb)
   }

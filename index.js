@@ -105,6 +105,13 @@ function fetch (worker) {
 
 function scrape (worker, req) {
   worker.getHtml((err, html) => {
+    if (!err) {
+      try {
+        html = JSON.parse(html)
+      } catch (error) {
+        err = error
+      }
+    }
     if (err) {
       if (err.message === 'not opened') {
         requests.push(req)
@@ -115,7 +122,8 @@ function scrape (worker, req) {
         available.push(worker)
       }
     } else {
-      req.res.end(html)
+      req.res.setHeader('content-type', `${html.contentType}; charset=${html.charset}`)
+      req.res.end(`<!doctype ${html.doctype}>\n${html.content}`)
       worker.clear()
       available.push(worker)
     }
